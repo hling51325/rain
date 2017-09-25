@@ -14,6 +14,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
 const sessionStore = require('connect-mongo');
+const profile = require('../config/profile')
 
 const maxBody = 500 * 1024 * 1024; // 500M
 
@@ -37,13 +38,16 @@ app.use(session({
     store: getSessionStore()
 }));
 app.use(helmet());
-app.use(express.static(path.join(__dirname, '/../public')));
+app.use(express.static(path.join(__dirname, '/../public/dist')));
 app.use(cors({
     origin: true,
     credentials: true
 }));
 
 app.use('/api', require('./api'))
+app.use('/*', (req, res) => {
+    res.sendFile(path.join(profile.public, 'index.html'))
+})
 
 app.use(function (req, res, next) {
     let err = new Error('Not Found');
