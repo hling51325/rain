@@ -19,7 +19,7 @@ function insertOne(collection, data) {
 }
 
 function findOneAndUpdate(collection, where, data) {
-    return collection.findOneAndUpdate(where, data)
+    return collection.findOneAndUpdate(where, {$set: data})
         .then(result => {
             return result.value
         })

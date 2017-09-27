@@ -14,7 +14,7 @@ mongo.connect()
     .then(() => {
         console.info('MongoDB connected')
 
-        let server = http.createServer( require('./express'));
+        let server = http.createServer(require('./express'));
 
         console.info('start web socket');
         webSocket.init(server);
@@ -22,5 +22,8 @@ mongo.connect()
         server.listen('3333', () => {
             console.info('server listening 3333');
         });
+    })
+    .catch(e => {
+        console.log(e)
     })
 

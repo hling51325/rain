@@ -1,21 +1,31 @@
 module.exports = {
+    signIn,
+    signOut,
+
     get,
     add,
-    updateById,
+    updateById
 }
 
-let User = require('./system/mongodb').getConnection('user')
-let ObjectID = require('./system/mongodb').ObjectID
+let User = require('./schema/user')
 
 function get() {
-    return User.find({}).toArray()
+    return User.find({})
 }
 
 function add(data) {
-    return User.insertOne(data)
+    let user = new User(data)
+    return user.save()
 }
 
 function updateById(id, data) {
-    id = new ObjectID(id)
     return User.findOneAndUpdate({_id: id}, data)
+}
+
+function signIn(data) {
+    return User.findOne({name: data.name})
+}
+
+function signOut() {
+
 }

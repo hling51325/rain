@@ -25,7 +25,7 @@
     "gridfs-stream": "^1.1.1",
     "helmet": "^3.4.0",
     "lodash": "^4.17.4",
-    "mongoose": "^4.8.2",
+    "mongoose": "^4.11.13",
     "morgan": "^1.8.1",
     "socket.io": "^1.7.2",
     "winston": "^2.3.1"
