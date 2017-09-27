@@ -14,8 +14,12 @@ function get() {
 }
 
 function add(data) {
-    let user = new User(data)
-    return user.save()
+    return User.find({}, 'uid').sort({uid: -1}).limit(1)
+        .then(({uid}) => {
+            data.uid = uid + 1
+            let user = new User(data)
+            return user.save()
+        })
 }
 
 function updateById(id, data) {
