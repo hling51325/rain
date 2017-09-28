@@ -16,14 +16,14 @@ function init(server) {
 
 
     io.on('connection', socket => {
+        console.log('a user connect...');
 
         socket.on('chat message', function (msg) {
             io.emit('chat message', msg);
         });
 
-        console.log('socket.io connect...');
         socket.on('disconnect', () => {
-            console.log('socket.io disconnect...');
+            console.log('a user disconnect...');
         });
         socket.broadcast.emit('hi'); // except current socket
         socket.emit('notification', {}); // send to one
