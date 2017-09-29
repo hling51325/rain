@@ -45,9 +45,9 @@ app.use(cors({
 }));
 
 app.use('/api', require('./api'))
-app.use('/*', (req, res) => {
-    res.sendFile(path.join(profile.public, 'index.html'))
-})
+// app.use('/*', (req, res) => {
+//     res.sendFile(path.join(profile.public, 'index.html'))
+// })
 
 app.use(function (req, res, next) {
     let err = new Error('Not Found');

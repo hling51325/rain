@@ -2,12 +2,17 @@ module.exports = {
     signIn,
     signOut,
 
+    getOne,
     get,
     add,
     updateById
 }
 
 let User = require('./schema/user')
+
+function getOne(where) {
+    return User.findOne(where)
+}
 
 function get() {
     return User.find({})
@@ -27,7 +32,7 @@ function updateById(id, data) {
 }
 
 function signIn(data) {
-    return User.findOne({name: data.name})
+    return User.findOne({username: data.username})
 }
 
 function signOut() {

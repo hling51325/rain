@@ -2,12 +2,15 @@ module.exports = (router, middleware) => {
     router.post('/sign-in', signIn);
     router.get('/sign-out', signOut);
 
+    router.get('/user', getUser);
+
     router.get('/users', getUsers);
     router.post('/users', addUser);
     router.patch('/users/:id', updateUser)
 };
 
 const User = require('../lib/user')
+const makeFilter = require('../lib/service/makeFilter')
 
 function signIn(req, res) {
     let data = req.body
@@ -19,8 +22,15 @@ function signOut(req, res) {
 
 }
 
+function getUser(req, res) {
+    let filter = makeFilter(req)
+    User.getOne(filter.where)
+        .then(data => res.json(data))
+}
+
 function getUsers(req, res) {
-    User.get()
+    let filter = makeFilter(req)
+    User.get(filter)
         .then(data => res.json(data))
 }
 
