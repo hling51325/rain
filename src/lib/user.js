@@ -1,6 +1,7 @@
 module.exports = {
     signIn,
     signOut,
+    signed,
 
     getOne,
     get,
@@ -37,4 +38,8 @@ function signIn(data) {
 
 function signOut() {
 
+}
+
+function signed(userId) {
+    return User.findById(userId)
 }

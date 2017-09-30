@@ -1,6 +1,7 @@
 module.exports = (router, middleware) => {
     router.post('/sign-in', signIn);
     router.get('/sign-out', signOut);
+    router.get('/signed', signed)
 
     router.get('/user', getUser);
 
@@ -15,11 +16,25 @@ const makeFilter = require('../lib/service/makeFilter')
 function signIn(req, res) {
     let data = req.body
     User.signIn(data)
-        .then(data => res.json(data))
+        .then(data => {
+            req.session.userId = data._id
+            req.session.username = data.username
+            res.json(data)
+        })
 }
 
 function signOut(req, res) {
+    delete req.session.userId
+    delete req.session.username
+    res.send(200)
+}
 
+function signed(req, res) {
+    let userId = req.session.userId
+    User.signed(userId)
+        .then(user => {
+            res.json(user)
+        })
 }
 
 function getUser(req, res) {
