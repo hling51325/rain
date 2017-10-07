@@ -53,6 +53,7 @@ function addUser(req, res) {
     let data = req.body
     User.add(data)
         .then(data => res.json(data))
+        .catch(e=> console.log(e))
 }
 
 function updateUser(req, res) {
