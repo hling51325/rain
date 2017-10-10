@@ -10,6 +10,8 @@ module.exports = {
 }
 
 let User = require('./schema/user')
+const crypto = require('crypto');
+
 
 function getOne(where) {
     return User.findOne(where)
@@ -20,11 +22,18 @@ function get() {
 }
 
 function add(data) {
+    if (!data.password || !data.username) return
+    data.password = passwordCrypto(data.password)
     return User.find({}, 'uid').sort({uid: -1}).limit(1)
-        .then(({uid}) => {
+        .then(result => {
+            let uid = result.uid || 0
             data.uid = uid + 1
             let user = new User(data)
             return user.save()
+                .then(user => {
+                    delete user.password
+                    return user
+                })
         })
 }
 
@@ -33,7 +42,11 @@ function updateById(id, data) {
 }
 
 function signIn(data) {
-    return User.findOne({username: data.username})
+    data.password = passwordCrypto(data.password)
+    return User.findOne({
+        username: data.username,
+        password: data.password
+    })
 }
 
 function signOut() {
@@ -42,4 +55,10 @@ function signOut() {
 
 function signed(userId) {
     return User.findById(userId)
+}
+
+function passwordCrypto(password) {
+    return crypto.createHmac('sha256', password)
+        .update('I love holo')
+        .digest('hex');
 }
