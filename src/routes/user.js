@@ -6,8 +6,8 @@ module.exports = (router, middleware) => {
     router.get('/user', getUser);
 
     router.get('/users', getUsers);
-    router.post('/users', addUser);
-    router.patch('/users/:id', updateUser)
+    router.post('/user', addUser);
+    router.patch('/user/:id', updateUser)
 };
 
 const User = require('../lib/user')
