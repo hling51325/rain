@@ -52,7 +52,11 @@ function getUsers(req, res) {
 function addUser(req, res) {
     let data = req.body
     User.add(data)
-        .then(data => res.json(data))
+        .then(data => {
+            req.session.userId = data._id
+            req.session.username = data.username
+            res.json(data)
+        })
         .catch(e=> console.log(e))
 }
 
