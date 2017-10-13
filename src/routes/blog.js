@@ -11,7 +11,7 @@ const makeFilter = require('../lib/service/makeFilter')
 
 function getBlogs(req, res) {
     let filter = makeFilter(req)
-    Blog.find(filter.where)
+    Blog.get(filter.where)
         .then(blogs => {
             res.json(blogs)
         })
