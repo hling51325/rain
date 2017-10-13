@@ -2,14 +2,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 let schema = mongoose.Schema({
-    title: String,
-    folderId: ObjectId,
-
-    content: String, // html ?
-    attachments: [{
-        key: String,
-        value: ObjectId
-    }], // 附件
+    name: String,
 
     createdAt: {
         type: Date,
@@ -18,7 +11,6 @@ let schema = mongoose.Schema({
     updatedAt: Date,
     createdBy: ObjectId,
     updatedBy: ObjectId
-
 });
 
-module.exports = mongoose.model('blog', schema);
+module.exports = mongoose.model('blogFolder', schema);
