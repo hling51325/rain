@@ -15,6 +15,8 @@ const cors = require('cors');
 const session = require('express-session');
 const sessionStore = require('connect-mongo');
 const profile = require('../config/profile')
+const graphqlHTTP = require('express-graphql')
+const schema = require('./schema')
 
 const maxBody = 500 * 1024 * 1024; // 500M
 
@@ -43,6 +45,11 @@ app.use(cors({
     origin: true,
     credentials: true
 }));
+
+app.use('/graphql', graphqlHTTP (req => ({
+    schema
+    //,graphiql:true
+})))
 
 app.use('/api', require('./api'))
 // app.use('/*', (req, res) => {
