@@ -13,8 +13,8 @@ let User = require('./schema/user')
 const crypto = require('crypto');
 
 
-function getOne(where) {
-    return User.findOne(where)
+function getOne(where, projection) {
+    return User.findOne(where, projection)
 }
 
 function get() {

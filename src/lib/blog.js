@@ -12,8 +12,8 @@ module.exports = {
 
 const Blog = require('./schema/blog')
 
-function get(where) {
-    return Blog.find(where)
+function get(where, projection) {
+    return Blog.find(where, projection)
 }
 
 function updateById(id, data) {
