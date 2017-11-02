@@ -14,6 +14,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
 const sessionStore = require('connect-mongo');
+const history = require('connect-history-api-fallback');
+
 const profile = require('../config/profile')
 const graphqlHTTP = require('express-graphql')
 const schema = require('./lib/graphql/schema')
@@ -55,6 +57,8 @@ app.use('/api', require('./api'))
 // app.use('/*', (req, res) => {
 //     res.sendFile(path.join(profile.public, 'index.html'))
 // })
+
+app.use(history())
 
 app.use(function (req, res, next) {
     let err = new Error('Not Found');
