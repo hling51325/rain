@@ -17,7 +17,7 @@ function get(where, projection) {
 }
 
 function updateById(id, data) {
-    return Blog.findOneAndUpdate({_id: id}, data)
+    return Blog.findOneAndUpdate({_id: id}, data, {new: true})
 }
 
 function findOne(where) {

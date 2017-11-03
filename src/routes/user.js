@@ -10,7 +10,7 @@ module.exports = (router, middleware) => {
 
     router.get('/users', getUsers);
     router.post('/user', addUser);
-    router.patch('/user/:id', upload.single('avatar'), setFile, updateUser)
+    router.put('/user/:id', upload.single('avatar'), setFile, updateUser)
 };
 
 const User = require('../lib/user')

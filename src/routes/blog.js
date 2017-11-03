@@ -2,7 +2,7 @@ module.exports = (router, middleware) => {
     router.get('/blogs', getBlogs)
     router.get('/blog/:id', getBlog)
     router.post('/blog', addBlog)
-    router.patch('/blog/:id', updateBlog)
+    router.put('/blog/:id', updateBlog)
     router.delete('/blog/:id', deleteBlog)
 };
 

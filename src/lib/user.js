@@ -38,7 +38,7 @@ function add(data) {
 }
 
 function updateById(id, data) {
-    return User.findOneAndUpdate({_id: id}, data)
+    return User.findOneAndUpdate({_id: id}, data, {new: true})
 }
 
 function signIn(data) {
