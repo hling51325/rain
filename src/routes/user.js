@@ -1,3 +1,6 @@
+const upload = require('../lib/service/multer')
+const setFile = require('../lib/service/setFile')
+
 module.exports = (router, middleware) => {
     router.post('/sign-in', signIn);
     router.get('/sign-out', signOut);
@@ -7,7 +10,7 @@ module.exports = (router, middleware) => {
 
     router.get('/users', getUsers);
     router.post('/user', addUser);
-    router.patch('/user/:id', updateUser)
+    router.patch('/user/:id', upload.single('avatar'), setFile, updateUser)
 };
 
 const User = require('../lib/user')
@@ -57,12 +60,16 @@ function addUser(req, res) {
             req.session.username = data.username
             res.json(data)
         })
-        .catch(e=> console.log(e))
+        .catch(e => console.log(e))
 }
 
 function updateUser(req, res) {
     let id = req.params.id
     let data = req.body
+    if (data.file) {
+        data.avatar = data.file._id
+        delete data.file
+    }
     User.updateById(id, data)
         .then(data => res.json(data))
 }

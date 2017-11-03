@@ -6,7 +6,10 @@ let {
     GraphQLList,
     GraphQLInt,
     GraphQLBoolean,
-    GraphQLID
+    GraphQLID,
+    GraphQLUnionType,
+    GraphQLInputObjectType,
+    GraphQLInterfaceType
 } = require('graphql')
 
 const getProjection = require('../service/getProjection')
@@ -31,11 +34,14 @@ let blogType = new GraphQLObjectType({
 let user = {
     type: new GraphQLList(blogType),
     args: {
-
+        title: {
+            type: GraphQLString
+        }
     },
-    resolve: (root, {}, source, fieldASTs) => {
+    resolve: (root, where, source, fieldASTs) => {
         let projections = getProjection(fieldASTs)
-        return Blog.get({}, projections)
+        where.title = new RegExp(where.title)
+        return Blog.get(where, projections)
     }
 }
 
