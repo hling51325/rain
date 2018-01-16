@@ -17,6 +17,7 @@ let schema = mongoose.Schema({
     avatar: ObjectId,
     nickname: String,
     birthday: Date,
+    createdAt: Date
 });
 
 module.exports = mongoose.model('user', schema);

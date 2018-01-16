@@ -54,6 +54,7 @@ function getUsers(req, res) {
 
 function addUser(req, res) {
     let data = req.body
+    data.createdBy = new Date()
     User.add(data)
         .then(data => {
             req.session.userId = data._id
@@ -71,5 +72,8 @@ function updateUser(req, res) {
         delete data.file
     }
     User.updateById(id, data)
-        .then(data => res.json(data))
+        .then(data => {
+            delete data.password
+            res.json(data)
+        })
 }
