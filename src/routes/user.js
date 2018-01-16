@@ -20,9 +20,15 @@ function signIn(req, res) {
     let data = req.body
     User.signIn(data)
         .then(data => {
+            if (!data) throw {
+                code: 1
+            }
             req.session.userId = data._id
             req.session.username = data.username
             res.json(data)
+        })
+        .catch(e => {
+            res.status(400).json(e)
         })
 }
 
