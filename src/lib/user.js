@@ -13,8 +13,8 @@ let User = require('./schema/user')
 const crypto = require('crypto');
 
 
-function getOne(where) {
-    return User.findOne(where)
+function getOne(where, projection) {
+    return User.findOne(where, projection)
 }
 
 function get() {
@@ -38,7 +38,7 @@ function add(data) {
 }
 
 function updateById(id, data) {
-    return User.findOneAndUpdate({_id: id}, data)
+    return User.findOneAndUpdate({_id: id}, data, {new: true})
 }
 
 function signIn(data) {

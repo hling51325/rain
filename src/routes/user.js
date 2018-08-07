@@ -1,3 +1,6 @@
+const upload = require('../lib/service/multer')
+const setFile = require('../lib/service/setFile')
+
 module.exports = (router, middleware) => {
     router.post('/sign-in', signIn);
     router.get('/sign-out', signOut);
@@ -6,8 +9,8 @@ module.exports = (router, middleware) => {
     router.get('/user', getUser);
 
     router.get('/users', getUsers);
-    router.post('/users', addUser);
-    router.patch('/users/:id', updateUser)
+    router.post('/user', addUser);
+    router.put('/user/:id', upload.single('avatar'), setFile, updateUser)
 };
 
 const User = require('../lib/user')
@@ -17,9 +20,15 @@ function signIn(req, res) {
     let data = req.body
     User.signIn(data)
         .then(data => {
+            if (!data) throw {
+                code: 1
+            }
             req.session.userId = data._id
             req.session.username = data.username
             res.json(data)
+        })
+        .catch(e => {
+            res.status(400).json(e)
         })
 }
 
@@ -51,14 +60,26 @@ function getUsers(req, res) {
 
 function addUser(req, res) {
     let data = req.body
+    data.createdBy = new Date()
     User.add(data)
-        .then(data => res.json(data))
-        .catch(e=> console.log(e))
+        .then(data => {
+            req.session.userId = data._id
+            req.session.username = data.username
+            res.json(data)
+        })
+        .catch(e => console.log(e))
 }
 
 function updateUser(req, res) {
     let id = req.params.id
     let data = req.body
+    if (data.file) {
+        data.avatar = data.file._id
+        delete data.file
+    }
     User.updateById(id, data)
-        .then(data => res.json(data))
+        .then(data => {
+            delete data.password
+            res.json(data)
+        })
 }
