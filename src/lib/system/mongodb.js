@@ -9,11 +9,17 @@ const gridFSStream = require('gridfs-stream');
 const config = require('../../../config/mongodb')
 const mongodb = require('mongodb')
 const mongoose = require('mongoose');
+gridFSStream.mongo = mongoose.mongo;
+let gfs
+let db
 mongoose.Promise = global.Promise;  // Use native promises
 
 module.exports = {
     getConnectUrl,
     connect,
+    getDB,
+    getFile,
+    getFileInfo,
     ObjectId: new mongoose.Types.ObjectId
 };
 
@@ -32,16 +38,39 @@ function getConnectUrl() {
 
 function connect() {
     return new Promise((resolve, reject) => {
-        mongoose.connect(getConnectUrl(),{
+        let conn = mongoose.connect(getConnectUrl(), {
             useMongoClient: true
         });
-        let db = mongoose.connection;
-        db.on('error', (e) => {
+        conn.on('error', (e) => {
             reject(e)
         });
-        db.once('open', () => {
+        conn.once('open', () => {
             // we're connected!
+            db = conn.db
+            gfs = gridFSStream(conn.db);
             resolve()
         });
+    })
+}
+
+function getDB(){
+    return db
+}
+
+function getFile(_id, res) {
+    let readstream = gfs.createReadStream({
+        _id
+    });
+    readstream.pipe(res);
+}
+
+function getFileInfo(_id) {
+    return new Promise((resolve, reject) => {
+        gfs.findOne({
+            _id
+        }, (err, file) => {
+            if (!err) resolve(file)
+            reject(err)
+        })
     })
 }
