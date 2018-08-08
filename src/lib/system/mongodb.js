@@ -6,6 +6,7 @@ const path = require('path');
 const os = require('os');
 const fs = require('fs');
 const stream = require("stream");
+const gridFSStream = require('gridfs-stream')
 const config = require('../../../config/mongodb')
 const mongodb = require('mongodb')
 const mongoose = require('mongoose');
