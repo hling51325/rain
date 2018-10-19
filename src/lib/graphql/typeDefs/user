@@ -1,0 +1,21 @@
+type User {
+    _id: ObjectId
+    username: String
+    nickname: String
+    password: String
+    createdAt: Date
+    createdBy: ObjectId
+    updatedAt: Date
+    updatedBy: ObjectId,
+
+    words: [Word]
+}
+
+extend type Query {
+    user(_id: String!): User
+    users: [User]
+}
+
+extend type Mutation {
+    addUser(username: String!, nickname: String, password: String!): User
+}

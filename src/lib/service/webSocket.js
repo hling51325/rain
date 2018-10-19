@@ -14,7 +14,6 @@ function init(server) {
 
     });
 
-
     io.on('connection', socket => {
         console.log('a user connect...');
 
@@ -28,5 +27,6 @@ function init(server) {
         socket.broadcast.emit('hi'); // except current socket
         socket.emit('notification', {}); // send to one
     });
+    
     io.emit('something', {}); // send to all
 }

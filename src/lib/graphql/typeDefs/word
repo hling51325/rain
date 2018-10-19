@@ -1,0 +1,19 @@
+type Word {
+    _id: ObjectId
+    content: String
+    createdAt: Date
+    createdBy: ObjectId
+    updatedAt: Date
+    updatedBy: ObjectId
+
+    creator: User
+}
+
+extend type Query {
+    word(_id: ObjectId, content: String): Word
+    words: [Word]
+}
+
+extend type Mutation {
+    addWord(content: String!): Word
+}

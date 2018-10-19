@@ -1,0 +1,14 @@
+scalar Date
+scalar ObjectId
+
+type Touch {
+    index: String
+}
+
+type Query {
+    touch: Touch
+}
+
+type Mutation {
+    touch(index: String): Touch
+}

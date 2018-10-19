@@ -1,29 +1,82 @@
-/**
- * Created by Holo on 2017/2/6.
- */
+const Koa = require('koa');
+const helmet = require("koa-helmet");
+const bodyParser = require('koa-bodyparser')
+const logger = require('koa-logger')
+const { ApolloServer, gql } = require('apollo-server-koa')
+const router = require('./lib/routes')
+const db = require('./lib/service/db')
+const serve = require('koa-static');
+// const sendfile = require('koa-sendfile')
+const path = require('path')
+const session = require('koa-session')
+const cors = require('@koa/cors');
+const SessionStore = require('./lib/service/sessionStore')
+const webSocket = require('./lib/service/webSocket');
 
-const http = require('http');
-const https = require('https');
-const fs = require('fs');
-let webSocket = require('./webSocket');
-const mongo = require('./lib/system/mongodb')
+const typeDefs = gql(require('./lib/graphql/typeDefs'))
+const resolvers = require('./lib/graphql/resolvers')
 
-console.info('start app');
-console.info(`=> start MongoDB service, ${mongo.getConnectUrl()}`);
-mongo.connect()
-    .then(() => {
-        console.info('MongoDB connected')
+const app = new Koa();
 
-        let server = http.createServer(require('./express'));
+app.use(cors({
+    credentials: true
+}))
 
-        console.info('start web socket');
-        webSocket.init(server);
-
-        server.listen('3333', () => {
-            console.info('server listening 3333');
-        });
+app.use(session({
+    renew: true,
+    store: new SessionStore({
+        expires: 86400 * 7 // 7 days
     })
-    .catch(e => {
-        console.log(e)
-    })
+}, app))
+
+app.use(bodyParser())
+
+app.use(async (ctx, next) => {
+    ctx.body = ctx.request.body
+    await next()
+})
+
+app.keys = ['tokinechiya']
+app.use(logger())
+app.use(helmet())
+app.use(serve(path.join(__dirname, '../public/dist')))
+
+app
+    .use(router.routes())
+    .use(router.allowedMethods())
+
+// error handler
+app.on('error', (err, ctx) => {
+    /* centralized error handling:
+     *   console.log error
+     *   write error to log file
+     *   save error and request information to database if ctx.request match condition
+     *   ...
+    */
+    console.log(err)
+});
+
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ ctx }) => {
+        // todo: add session
+        return ctx
+        // return {
+        //      authScope: getScope(ctx.headers.authorization)
+        // }
+    }
+})
+
+server.applyMiddleware({ app }) // 需要最后注册，没有next()
+
+module.exports = {
+    run: async (port) => {
+        await db.connect()
+        let server = await app.listen(port)
+        webSocket.init(server)
+        console.log(`Server Listening ${port}`)
+    },
+    app
+}
 
