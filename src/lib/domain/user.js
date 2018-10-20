@@ -8,7 +8,7 @@ module.exports = {
     signUp,
     getById,
     updateById,
-    error
+    isExist
 }
 
 function getById(_id, projection) {
@@ -24,15 +24,17 @@ function signIn(username, password) {
     return User.findOne({ username, password })
 }
 
-function error(code) {
-
+async function isExist(where) {
+    return !!(await User.findOne(where))
 }
 
 function signed(userId) {
     return getById(userId, ['-password'])
 }
 
-function signUp(data) {
+async function signUp(data) {
     data.password = passwordCrypto(data.password)
-    return User.create(data)
+    let user = await User.create(data)
+    delete user.password
+    return user
 }

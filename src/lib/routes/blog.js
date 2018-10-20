@@ -6,18 +6,33 @@ module.exports = (router, middleware) => {
     router.delete('/blogs/:id', deleteBlog)
 };
 
+const Blog = require('../domain/blog')
 
 function getBlogs(ctx, next) {
+    ctx.response.body = []
 }
 
-function getBlog(ctx, next) {
+async function getBlog(ctx, next) {
+    let { id } = ctx.params
+    let blog = await Blog.getById(id)
+    ctx.response.body = blog
 }
 
-function addBlog(ctx, next) {
+async function addBlog(ctx, next) {
+    let data = crx.body
+    let blog = await Blog.addBlog(data)
+    ctx.response.body = blog
 }
 
-function updateBlog(ctx, next) {
+async function updateBlog(ctx, next) {
+    let { id } = ctx.params
+    let data = ctx.body
+    let blog = await Blog.updateById(id, data)
+    ctx.response.body = blog
 }
 
-function deleteBlog(ctx, next) {
+async function deleteBlog(ctx, next) {
+    let { id } = ctx.params
+    await Blog.removeById(id)
+    ctx.status = 204
 }
