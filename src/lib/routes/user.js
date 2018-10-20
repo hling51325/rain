@@ -36,9 +36,9 @@ async function me(ctx, next) {
 
 async function signUp(ctx, next) {
     const { username, password } = ctx.body
-    if (!username || !password) ctx.throw(400, errMsg('user.none'));
+    if (!username || !password) throw errMsg('user.none')
     let isExist = await User.isExist({ username })
-    if(isExist) ctx.throw(400, errMsg('user.exist'));
+    if (isExist) throw errMsg('user.exist')
 
     let user = await User.signUp({ username, password })
     ctx.session.userId = user._id

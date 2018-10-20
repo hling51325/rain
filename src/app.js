@@ -41,20 +41,19 @@ app.use(logger())
 app.use(helmet())
 app.use(serve(path.join(__dirname, '../public/dist')))
 
+// error handler
+app.use(async (ctx, next) => {
+    try {
+        await next()
+    } catch (err) {
+        ctx.status = err.status
+        ctx.response.body = err
+    }
+})
+
 app
     .use(router.routes())
     .use(router.allowedMethods())
-
-// error handler
-app.on('error', (err, ctx) => {
-    /* centralized error handling:
-     *   console.log error
-     *   write error to log file
-     *   save error and request information to database if ctx.request match condition
-     *   ...
-    */
-    console.log(err)
-});
 
 const server = new ApolloServer({
     typeDefs,

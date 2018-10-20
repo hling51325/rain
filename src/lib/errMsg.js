@@ -13,7 +13,5 @@ const errorMessagegs = {
 
 module.exports = (which) => {
     let array = which.split('.')
-    return array.reduce((curr, next) => {
-        return errorMessagegs[next]
-    }, {})
+    return array.reduce((curr, next) => curr[next], errorMessagegs)
 }
