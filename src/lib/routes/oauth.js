@@ -1,21 +1,24 @@
 
 module.exports = (router) => {
-    router.get('/third-part-auth/:type', getThirdPart)
+    router.get('/oauth/urls', getOAuthUrl)
     router.get('/oauth/callback', oauthCallback)
-    router.get('/authorize', getAuth)
-    router.post('/token', getToken)
+    // router.get('/authorize', getAuth)
+    // router.post('/token', getToken)
 }
 const crypto = require('crypto');
-const clientId = '49c8adb08594328d54b1'
-const clientSecret = '0fa12b38df27b33edeaea7f23fdfc2917d3497f1'
-const redirectUri = 'https://tokine.online/api/oauth/callback'
-const state = passwordCrypto((Math.random() * 100).toFixed(2))
+const axios = require('axios')
 
-function getThirdPart(req, res) {
-    let type = req.params.type
-    type = 'github'
-    let url = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user&state=${state}`
-    res.redirect(url)
+async function getOAuthUrl(ctx, next) {
+    const oauth = require('../../../config/oauth')
+
+    let { to } = ctx.query
+    let url
+    if (to === 'github') {
+        let { CLIENT_ID, REDIRECT_URI } = oauth.GITHUB
+        const state = passwordCrypto((Math.random() * 100).toFixed(2))
+        url = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=user&state=${state}`
+    }
+    ctx.response.body = url
 }
 
 
@@ -25,23 +28,23 @@ function passwordCrypto(password) {
         .digest('hex');
 }
 
-async function oauthCallback(req, res) {
+async function oauthCallback(ctx, nrxt) {
     const {
         code,
         state
-    } = req.body
+    } = ctx.body
 
-    let response = await axios.post('https://github.com/login/oauth/access_token',{
-        client_id:clientId,
-        client_secret:clientSecret,
+    let response = await axios.post('https://github.com/login/oauth/access_token', {
+        client_id: clientId,
+        client_secret: clientSecret,
         code,
         redirect_uri: 'https://tokine.online',
         state
-    },{
-        headers:{
-            Accept: "application/json"
-        }
-    })
+    }, {
+            headers: {
+                Accept: "application/json"
+            }
+        })
     // {"access_token":"e72e16c7e42f292c6912e7710c838347ae178b4a", "scope":"repo,gist", "token_type":"bearer"}
     // response
 }

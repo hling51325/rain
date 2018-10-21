@@ -1,6 +1,8 @@
 
 module.exports = (Schema) =>{
     let schema = Schema({
+        state: String,
+        accessToken: String,
         username: String,
         nickname: String,
         password: String,
