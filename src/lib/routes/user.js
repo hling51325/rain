@@ -16,15 +16,16 @@ async function signIn(ctx, next) {
     const { username, password } = ctx.body
     if (!username || !password) ctx.throw(400, errMsg('user.none'));
     let user = await User.signIn(username, password)
-    if (!user) ctx.throw(400, errMsg('user.none'));
-    ctx.session.userId = user._id
-    ctx.session.username = user.username
+    if (!user) ctx.throw(400, errMsg('user.none'))
+    ctx.session = {
+        userId: user._id,
+        username: user.username
+    }
     ctx.response.body = user
 }
 
 function signOut(ctx, next) {
-    delete ctx.session.userId
-    delete ctx.session.username
+    ctx.session = null
     ctx.status = 200
 }
 
@@ -41,11 +42,17 @@ async function signUp(ctx, next) {
     if (isExist) throw errMsg('user.exist')
 
     let user = await User.signUp({ username, password })
-    ctx.session.userId = user._id
-    ctx.session.username = user.username
+    ctx.session = {
+        userId: user._id,
+        username: user.username
+    }
     ctx.response.body = user
 }
 
 async function update(ctx, next) {
+    let { id } = ctx.params
+    let data = ctx.body
     console.log(ctx.body)
+    let user = await User.updateById(id, data)
+    ctx.response.body = user
 }

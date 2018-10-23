@@ -9,7 +9,9 @@ module.exports = (Schema) =>{
         email: String,
         phone: String,
         gender: Number, // 0: no, 1: male, 2: female, 3: transform, 4: bisexual 
-        birthday: Date
+        birthday: Date,
+
+        githubId: String
     })
     
     return schema

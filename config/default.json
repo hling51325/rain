@@ -1,4 +1,5 @@
 {
+    "SERVER": "https://tokine.online",
     "PORT": 3000,
     "DB_URL": "mongodb://root:root@127.0.0.1:27017/tokine",
     "FILE_SIZE_LIMIT": 5120

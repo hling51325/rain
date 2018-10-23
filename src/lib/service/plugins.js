@@ -21,8 +21,16 @@ function addDefaultField(schema, option) {
 }
 
 function middleware(schema) {
+    schema.pre('findOneAndUpdate', setDefaultOptions);
+    schema.pre('updateMany', setDefaultOptions);
+    schema.pre('updateOne', setDefaultOptions);
+    schema.pre('update', setDefaultOptions);
     schema.pre('save', function (next) {
         this.updatedAt = new Date();
         next();
     });
+
+    function setDefaultOptions() {
+        this.setOptions({ new: true });
+      }
 }

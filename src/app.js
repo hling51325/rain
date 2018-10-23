@@ -4,7 +4,7 @@ const bodyParser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const { ApolloServer, gql } = require('apollo-server-koa')
 const router = require('./lib/routes')
-const db = require('./lib/service/db')
+const {connect, ObjectId} = require('./lib/service/db')
 const serve = require('koa-static');
 // const sendfile = require('koa-sendfile')
 const path = require('path')
@@ -12,11 +12,14 @@ const session = require('koa-session')
 const cors = require('@koa/cors');
 const SessionStore = require('./lib/service/sessionStore')
 const webSocket = require('./lib/service/webSocket');
+const passport = require('koa-passport')
 
 const typeDefs = gql(require('./lib/graphql/typeDefs'))
 const resolvers = require('./lib/graphql/resolvers')
 
 const app = new Koa();
+
+// app.proxy = true
 
 app.use(cors({
     credentials: true
@@ -24,10 +27,15 @@ app.use(cors({
 
 app.use(session({
     renew: true,
+    genid: () => new ObjectId(),
     store: new SessionStore({
         expires: 86400 * 7 // 7 days
     })
 }, app))
+
+require('./lib/service/oauth')
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(bodyParser())
 
@@ -72,7 +80,7 @@ server.applyMiddleware({ app }) // 需要最后注册，没有next()
 
 module.exports = {
     run: async (port) => {
-        await db.connect()
+        await connect()
         let server = await app.listen(port)
         webSocket.init(server)
         console.log(`Server Listening ${port}`)

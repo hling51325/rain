@@ -1,24 +1,31 @@
 
 module.exports = (router) => {
-    router.get('/oauth/urls', getOAuthUrl)
-    router.get('/oauth/callback', oauthCallback)
+    // router.get('/oauth/urls/:site', getOAuthUrl)
+    router.get('/oauth/:site/callback', oauthCallback)
     // router.get('/authorize', getAuth)
     // router.post('/token', getToken)
+    router.get('/oauth/:site', oauth)
 }
 const crypto = require('crypto');
 const axios = require('axios')
 
+async function oauth(ctx) {
+    const { site } = ctx.params
+    passport.authenticate(site)
+}
+
 async function getOAuthUrl(ctx, next) {
     const oauth = require('../../../config/oauth')
 
-    let { to } = ctx.query
+    const { site } = ctx.params
     let url
-    if (to === 'github') {
+    if (site === 'github') {
         let { CLIENT_ID, REDIRECT_URI } = oauth.GITHUB
-        const state = passwordCrypto((Math.random() * 100).toFixed(2))
-        url = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=user&state=${state}`
+        const state = passwordCrypto((Math.random() * 10000).toFixed(0))
+        url = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&state=${state}`
     }
-    ctx.response.body = url
+    ctx.redirect(url)
+    // ctx.response.body = url
 }
 
 
@@ -29,24 +36,34 @@ function passwordCrypto(password) {
 }
 
 async function oauthCallback(ctx, nrxt) {
+    const { site } = ctx.params
     const {
         code,
         state
-    } = ctx.body
+    } = ctx.query
 
-    let response = await axios.post('https://github.com/login/oauth/access_token', {
-        client_id: clientId,
-        client_secret: clientSecret,
-        code,
-        redirect_uri: 'https://tokine.online',
-        state
-    }, {
-            headers: {
-                Accept: "application/json"
-            }
-        })
+    passport.authenticate(site, {
+        successRedirect: '/',
+        failureRedirect: '/'
+    })
+
+    // let response = await axios.post('https://github.com/login/oauth/access_token', {
+    //     client_id: clientId,
+    //     client_secret: clientSecret,
+    //     code,
+    //     redirect_uri: 'https://tokine.online',
+    //     state
+    // }, {
+    //         headers: {
+    //             Accept: "application/json"
+    //         }
+    //     })
     // {"access_token":"e72e16c7e42f292c6912e7710c838347ae178b4a", "scope":"repo,gist", "token_type":"bearer"}
     // response
+}
+
+function initOAuth(ctx, next) {
+    const state = passwordCrypto((Math.random() * 100).toFixed(2))
 }
 
 function getAuth(req, res) {

@@ -2,7 +2,6 @@
 const mongoose = require('mongoose')
 
 const schema = {
-    id: String,
     data: Object,
     updatedAt: {
         default: new Date(),
@@ -21,22 +20,22 @@ class MongooseStore {
         this.session = mongoose.model(name, new Schema({ ...schema, updatedAt }));
     }
 
-    async destroy(id) {
+    async destroy(_id) {
         const { session } = this;
-        return session.remove({ id });
+        return session.remove({ _id });
     }
 
-    async get(id) {
+    async get(_id) {
         const { session } = this;
-        const { data } = await session.findOne({ id });
+        const { data } = await session.findOne({ _id });
         return data;
     }
 
-    async set(id, data, maxAge, { changed, rolling }) {
+    async set(_id, data, maxAge, { changed, rolling }) {
         if (changed || rolling) {
             const { session } = this;
-            const record = { id, data, updatedAt: new Date() };
-            await session.findOneAndUpdate({ id }, record, { upsert: true, safe: true });
+            const record = { data, updatedAt: new Date() };
+            await session.findOneAndUpdate({ _id }, record, { upsert: true, safe: true });
         }
         return data;
     }
