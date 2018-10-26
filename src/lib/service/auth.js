@@ -9,12 +9,12 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser((_id, done) => {
-    User.findOne({ _id }, done);
+    User.findOne({ _id }, done)
 })
 
 const LocalStrategy = require('passport-local').Strategy
 passport.use(new LocalStrategy((username, password, done) => {
-    User.findOne({ username, password: passwordCrypto(passport) }, done);
+    User.findOne({ username, password: passwordCrypto(password) }, done)
 }))
 
 const GithubStrategy = require('passport-github').Strategy
@@ -23,5 +23,5 @@ passport.use(new GithubStrategy({
     clientSecret: GITHUB.CLIENT_SECRET,
     callbackURL: `${SERVER}/api/oauth/github/callback`
 }, (accessToken, refreshToken, profile, done) => {
-    User.findOneAndUpdate({ githubId: profile.id }, done);
+    User.findOneAndUpdate({ 'oauths.id': profile.id }, {}, done) // ?
 }))

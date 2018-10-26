@@ -1,5 +1,5 @@
 
-module.exports = (Schema) =>{
+module.exports = (Schema) => {
     let schema = Schema({
         state: String,
         accessToken: String,
@@ -11,8 +11,13 @@ module.exports = (Schema) =>{
         gender: Number, // 0: no, 1: male, 2: female, 3: transform, 4: bisexual 
         birthday: Date,
 
-        githubId: String
+        oauths: [{
+            _id: false,
+            id: String,
+            accessToken: String,
+            
+        }]
     })
-    
+
     return schema
 }

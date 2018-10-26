@@ -8,6 +8,12 @@ const errorMessagegs = {
             status: 400,
             message: '用户已存在'
         }
+    },
+    auth: {
+        noAuth: {
+            status: 403,
+            message: '没有权限'
+        }
     }
 }
 

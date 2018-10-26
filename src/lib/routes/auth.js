@@ -6,6 +6,7 @@ module.exports = (router) => {
     router.get('/logout', logout)
 }
 const passport = require('koa-passport')
+const errMsg = require('../errMsg')
 
 function login(ctx) {
     passport.authenticate('local', {
@@ -19,8 +20,7 @@ async function logout(ctx) {
         ctx.logout();
         ctx.redirect('/');
     } else {
-        ctx.body = { success: false };
-        ctx.throw(401);
+        throw errMsg('auth.noAuth')
     }
 }
 
