@@ -1,7 +1,7 @@
 
 
 const { Project, Member, User } = require('../schema')
-const { defaultRoles } = require('../../../config/global')
+const { defaultRoles } = require('../../config/global')
 
 module.exports = {
     get,

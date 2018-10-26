@@ -33,7 +33,7 @@ app.use(session({
     })
 }, app))
 
-require('./lib/service/oauth')
+require('./lib/service/auth')
 app.use(passport.initialize())
 app.use(passport.session())
 
