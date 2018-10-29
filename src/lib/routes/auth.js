@@ -9,7 +9,7 @@ const passport = require('koa-passport')
 const errMsg = require('../errMsg')
 
 function login(ctx) {
-    passport.authenticate('local', {
+    return passport.authenticate('local', {
         successRedirect: '/',
         failureRedirect: '/'
     })(ctx)
@@ -26,12 +26,12 @@ async function logout(ctx) {
 
 async function oauth(ctx, next) {
     const { site } = ctx.params
-    passport.authenticate(site)(ctx)
+    return passport.authenticate(site)(ctx)
 }
 
 async function oauthCallback(ctx, next) {
     const { site } = ctx.params
-    passport.authenticate(site, (err, user, info, status) => {
+    return passport.authenticate(site, (err, user, info, status) => {
         ctx.body = { err, user, info, status }
         return ctx.login(user)
     })(ctx, next)

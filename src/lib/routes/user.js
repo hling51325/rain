@@ -11,24 +11,13 @@ module.exports = (router, middleware) => {
 const User = require('../domain/user')
 const passport = require('koa-passport')
 const errMsg = require('../errMsg')
-// const makeFilter = require('../lib/service/makeFilter')
 
 async function signIn(ctx, next) {
-    passport.authenticate('local', function (err, user, info, status) {
-        if (!user) ctx.throw(400, errMsg('user.none'))
+    return passport.authenticate('local', function (err, user, info, status) {
+        if (!user) throw errMsg('user.none')
         ctx.body = user
         return ctx.login(user)
-    })(ctx, next)
-
-    // const { username, password } = ctx.body
-    // if (!username || !password) ctx.throw(400, errMsg('user.none'));
-    // let user = await User.signIn(username, password)
-    // if (!user) ctx.throw(400, errMsg('user.none'))
-    // ctx.session = {
-    //     userId: user._id,
-    //     username: user.username
-    // }
-    // ctx.response.body = user
+    })(ctx)
 }
 
 function signOut(ctx, next) {
@@ -38,7 +27,6 @@ function signOut(ctx, next) {
 
 async function me(ctx, next) {
     let auth = ctx.isAuthenticated()
-    console.log(auth)
     let userId = ctx.session.userId
     let user = await User.signed(userId)
     ctx.response.body = user

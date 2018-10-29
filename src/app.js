@@ -18,6 +18,7 @@ const typeDefs = gql(require('./lib/graphql/typeDefs'))
 const resolvers = require('./lib/graphql/resolvers')
 
 const app = new Koa();
+app.keys = ['tokinechiya']
 
 // app.proxy = true
 
@@ -33,18 +34,18 @@ app.use(session({
     })
 }, app))
 
+app.use(bodyParser())
+
+require('./lib/service/auth')
 app.use(passport.initialize())
 app.use(passport.session())
-require('./lib/service/auth')
     
-app.use(bodyParser())
 
 app.use(async (ctx, next) => {
     ctx.body = ctx.request.body
     await next()
 })
 
-app.keys = ['tokinechiya']
 app.use(logger())
 app.use(helmet())
 app.use(serve(path.join(__dirname, '../public/dist')))
