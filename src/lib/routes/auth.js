@@ -29,10 +29,10 @@ async function oauth(ctx, next) {
     passport.authenticate(site)(ctx)
 }
 
-async function oauthCallback(ctx, nrxt) {
+async function oauthCallback(ctx, next) {
     const { site } = ctx.params
-    passport.authenticate(site, {
-        successRedirect: '/',
-        failureRedirect: '/'
-    })(ctx)
+    passport.authenticate(site, (err, user, info, status) => {
+        ctx.body = { err, user, info, status }
+        return ctx.login(user)
+    })(ctx, next)
 }

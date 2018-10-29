@@ -33,10 +33,10 @@ app.use(session({
     })
 }, app))
 
-require('./lib/service/auth')
 app.use(passport.initialize())
 app.use(passport.session())
-
+require('./lib/service/auth')
+    
 app.use(bodyParser())
 
 app.use(async (ctx, next) => {
