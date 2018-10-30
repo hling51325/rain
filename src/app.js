@@ -4,7 +4,7 @@ const bodyParser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const { ApolloServer, gql } = require('apollo-server-koa')
 const router = require('./lib/routes')
-const {connect, ObjectId} = require('./lib/service/db')
+const { connect, ObjectId } = require('./lib/service/db')
 const serve = require('koa-static');
 // const sendfile = require('koa-sendfile')
 const path = require('path')
@@ -39,12 +39,6 @@ app.use(bodyParser())
 require('./lib/service/auth')
 app.use(passport.initialize())
 app.use(passport.session())
-    
-
-app.use(async (ctx, next) => {
-    ctx.body = ctx.request.body
-    await next()
-})
 
 app.use(logger())
 app.use(helmet())
@@ -61,9 +55,8 @@ app.use(async (ctx, next) => {
     }
 })
 
-app
-    .use(router.routes())
-    .use(router.allowedMethods())
+app.use(router.routes())
+app.use(router.allowedMethods())
 
 const server = new ApolloServer({
     typeDefs,

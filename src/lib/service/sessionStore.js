@@ -27,8 +27,8 @@ class MongooseStore {
 
     async get(_id) {
         const { session } = this;
-        const { data } = await session.findOne({ _id });
-        return data;
+        const __session = await session.findOne({ _id });
+        return __session && __session.data;
     }
 
     async set(_id, data, maxAge, { changed, rolling }) {
