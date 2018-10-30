@@ -50,7 +50,7 @@ async function oauth(ctx, next) {
 async function oauthCallback(ctx, next) {
     const { site } = ctx.params
     return passport.authenticate(site, (err, user, info, status) => {
-        ctx.body = { err, user, info, status }
+        ctx.body = user
         return ctx.login(user)
     })(ctx, next)
 }
