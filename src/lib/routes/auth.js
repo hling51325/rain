@@ -1,5 +1,7 @@
 
 module.exports = (router) => {
+    router.get('/me', me)
+
     router.post('/sign-in', signIn);
     router.get('/sign-out', signOut);
     router.post('/sign-up', signUp);
@@ -9,6 +11,12 @@ module.exports = (router) => {
 }
 const passport = require('koa-passport')
 const errMsg = require('../errMsg')
+
+async function me(ctx, next) {
+    if (!ctx.isAuthenticated()) ctx.response.body = {}
+    let user = ctx.state.user.toJSON()
+    ctx.response.body = user
+}
 
 async function signIn(ctx, next) {
     return passport.authenticate('local', function (err, user, info, status) {
@@ -34,12 +42,12 @@ async function signUp(ctx, next) {
     let isExist = await User.isExist({ username })
     if (isExist) throw errMsg('user.exist')
 
-    let user = await User.signUp({ username, password })
-    ctx.session = {
-        userId: user._id,
-        username: user.username
-    }
-    ctx.response.body = user
+    await User.signUp({ username, password })
+    return passport.authenticate('local', function (err, user, info, status) {
+        if (!user) throw errMsg('user.none')
+        ctx.body = user
+        return ctx.login(user)
+    })(ctx)
 }
 
 async function oauth(ctx, next) {
