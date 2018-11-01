@@ -1,8 +1,13 @@
 const upload = require('../service/multer')
 
-module.exports = (router, middleware) => {
-    router.put('/user/:id', upload.single('avatar'), update)
-};
+module.exports = [
+    {
+        verb: 'put',
+        url: '/user/:id/',
+        before: [upload.single('avatar')],
+        method: update
+    }
+]
 
 const User = require('../domain/user')
 const errMsg = require('../errMsg')

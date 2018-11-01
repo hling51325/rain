@@ -1,14 +1,37 @@
 
-module.exports = (router) => {
-    router.get('/me', me)
+module.exports = [
+    {
+        verb: 'get',
+        url: '/me/',
+        method: me
+    },
+    {
+        verb: 'post',
+        url: '/sign-in/',
+        method: signIn
+    },
+    {
+        verb: 'get',
+        url: '/sign-out/',
+        method: signOut
+    },
+    {
+        verb: 'post',
+        url: '/sign-up/',
+        method: signUp
+    },
+    {
+        verb: 'get',
+        url: '/auth/:site/callback/',
+        method: oauthCallback
+    },
+    {
+        verb: 'get',
+        url: '/auth/:site/',
+        method: oauth
+    }
+]
 
-    router.post('/sign-in', signIn);
-    router.get('/sign-out', signOut);
-    router.post('/sign-up', signUp);
-
-    router.get('/auth/:site/callback', oauthCallback)
-    router.get('/auth/:site', oauth)
-}
 const passport = require('koa-passport')
 const errMsg = require('../errMsg')
 

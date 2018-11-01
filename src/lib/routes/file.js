@@ -1,21 +1,23 @@
-module.exports = (router, middleware) => {
-    router.get('/files/:id', getFile)
-    // router.post('/files', upload.single('file'), uploadFile);
+const upload = require('../service/multer')
 
-    router.get('/files/:id/:name', getFileByName)
-};
-
-// const mongo = require('../lib/system/mongodb')
-// const multer = require('multer');
-// const storage = require('multer-gridfs-storage')({
-//     db: mongo.getDB(),
-//     file(req, file) {
-//         return {
-//             filename: file.originalname
-//         }
-//     }
-// });
-// const upload = multer({ storage: storage });
+module.exports = [
+    {
+        verb: 'get',
+        url: '/files/:id/',
+        method: getFile
+    },
+    {
+        verb: 'post',
+        url: '/files/',
+        before: [upload.single('file')],
+        method: uploadFile
+    },
+    {
+        verb: 'get',
+        url: '/files/:id/:name/',
+        method: getFileByName
+    }
+]
 
 function uploadFile(req, res) {
     res.json(req.file)
