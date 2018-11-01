@@ -1,10 +1,32 @@
-module.exports = (router, middleware) => {
-    router.get('/blogs', getBlogs)
-    router.get('/blogs/:id', getBlog)
-    router.post('/blogs', addBlog)
-    router.put('/blogs/:id', updateBlog)
-    router.delete('/blogs/:id', deleteBlog)
-};
+module.exports = [
+    {
+        verb: 'get',
+        url: '/blogs/',
+        before: [],
+        method: getBlogs,
+        after: []
+    },
+    {
+        verb: 'get',
+        url: '/blogs/:id/',
+        method: getBlog
+    },
+    {
+        verb: 'post',
+        url: '/blogs/',
+        method: addBlog
+    },
+    {
+        verb: 'put',
+        url: '/blogs/:id/',
+        method: updateBlog
+    },
+    {
+        verb: 'delete',
+        url: '/blogs/:id/',
+        method: deleteBlog
+    }
+]
 
 const Blog = require('../domain/blog')
 
