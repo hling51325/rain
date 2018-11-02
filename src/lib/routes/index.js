@@ -6,14 +6,17 @@ const router = new Router({
     prefix: '/api'
 });
 const rootPath = path.join(__dirname, './')
-let files = fs.readdirSync(rootPath).filter(file => file !== 'index.js')
+let files = fs.readdirSync(rootPath)
+    .map(file => file.replace('.js', ''))
+    .filter(file => file !== 'index')
 let noAuthRoutes = ['auth', 'touch']
 
 files.forEach(file => {
     let apis = require(path.join(rootPath, file))
     apis.forEach(api => {
         api = fillApi(api)
-        router[api.verb](api.url, api.method)
+        if (!noAuthRoutes.includes(file)) api.middlewares.unshift(isAuth)
+        router[api.verb](api.url, ...api.middlewares)
     })
 })
 
@@ -31,5 +34,13 @@ function fillApi(api) {
     if (!api.verb) throw 'no verb'
     if (!api.url) throw 'no url'
     if (!api.method) throw 'no method'
+    api.middlewares = api.middlewares || []
+    if (api.before) {
+        api.middlewares = api.middlewares.concat(api.before)
+    }
+    api.middlewares = api.middlewares.concat(api.method)
+    if (api.after) {
+        api.middlewares = api.middlewares.concat(api.after)
+    }
     return api
 }
