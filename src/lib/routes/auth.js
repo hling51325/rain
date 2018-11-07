@@ -58,7 +58,6 @@ async function signOut(ctx) {
     }
 }
 
-// todo
 async function signUp(ctx, next) {
     const { username, password } = ctx.body
     if (!username || !password) throw errMsg('user.none')
