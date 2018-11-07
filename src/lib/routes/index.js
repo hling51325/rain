@@ -26,7 +26,7 @@ async function isAuth(ctx, next) {
     if (ctx.isAuthenticated()) {
         await next()
     } else {
-        ctx.redirect('/')
+        ctx.redirect('/') // TODO: if no Auth return ?
     }
 }
 
@@ -35,6 +35,7 @@ function fillApi(api) {
     if (!api.url) throw 'no url'
     if (!api.method) throw 'no method'
     api.middlewares = api.middlewares || []
+    // befores before / afters after / method methods / ---> array ?
     if (api.before) {
         api.middlewares = api.middlewares.concat(api.before)
     }
