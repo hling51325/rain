@@ -1,33 +1,22 @@
-module.exports = req => {
+module.exports = async (ctx, next) => {
     let filter = {
         where: {},
-        sort: null,
-        limit: -1,
-        skip: 0,
-        project: null
-    }
+        sort = null,
+        project = null,
+        skip = 0,
+        limit = -1
+    } = ctx.query
 
-    let where = req.query.where || null;
-    if (where) {
+    if (filter.where) {
         try {
-            where = JSON.parse(where);
+            filter.where = JSON.parse(where);
         } catch (error) {
             throw `parse filter.where: ${error}`;
         }
     }
-    filter.where = where
 
-    filter.sort = req.query.sort || null;
-    filter.project = req.query.project || null;
-
-    let limit = req.query.limit;
-    if (limit) {
-        filter.limit = Number(limit);
-    }
-    let skip = req.query.skip;
-    if (skip) {
-        filter.skip = Number(skip);
-    }
-
-    return filter
+    filter.limit = Number(filter.limit)
+    filter.skip = Number(filter.skip)
+    ctx.filter = filter
+    await next()
 }
