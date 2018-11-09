@@ -1,6 +1,6 @@
 module.exports = async (ctx, next) => {
-    let filter = {
-        where: {},
+    let filter =  {
+        where = {},
         sort = null,
         project = null,
         skip = 0,
