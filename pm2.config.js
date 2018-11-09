@@ -2,7 +2,7 @@ module.exports = {
     apps: [
         {
             name: "tokine",
-            script: "./run.js",
+            script: "./bin/run.js",
             watch: true,
             env: {
                 "NODE_ENV": "development"
