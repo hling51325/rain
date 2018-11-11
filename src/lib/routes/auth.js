@@ -33,10 +33,11 @@ module.exports = [
 ]
 
 const passport = require('koa-passport')
+const User = require('../domain/user')
 const errMsg = require('../errMsg')
 
 async function me(ctx, next) {
-    if (!ctx.isAuthenticated()) ctx.response.body = {}
+    if (!ctx.isAuthenticated()) return ctx.response.body = {}
     let user = ctx.state.user.toJSON()
     ctx.response.body = user
 }
@@ -59,7 +60,7 @@ async function signOut(ctx) {
 }
 
 async function signUp(ctx, next) {
-    const { username, password } = ctx.body
+    const { username, password } = ctx.request.body
     if (!username || !password) throw errMsg('user.none')
     let isExist = await User.isExist({ username })
     if (isExist) throw errMsg('user.exist')

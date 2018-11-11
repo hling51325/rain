@@ -1,5 +1,5 @@
 module.exports = async (ctx, next) => {
-    let filter =  {
+    let filter = {
         where = {},
         sort = null,
         project = null,
@@ -15,8 +15,5 @@ module.exports = async (ctx, next) => {
         }
     }
 
-    filter.limit = Number(filter.limit)
-    filter.skip = Number(filter.skip)
-    ctx.filter = filter
     await next()
 }
