@@ -7,6 +7,7 @@ const router = require('./lib/routes')
 const { connect, ObjectId } = require('./lib/service/db')
 const serve = require('koa-static');
 // const sendfile = require('koa-sendfile')
+const fs = require('fs')
 const path = require('path')
 const session = require('koa-session')
 const cors = require('@koa/cors');
@@ -48,6 +49,10 @@ app.use(serve(path.join(__dirname, '../public/dist')))
 app.use(async (ctx, next) => {
     try {
         await next()
+        if (ctx.status === 404) {
+            ctx.response.type = 'html';
+            ctx.response.body = fs.createReadStream(path.join(__dirname, '../public/dist/index.html'))
+        }
     } catch (err) {
         if (err.stack) console.log(err.stack)
         ctx.status = err.status || 500
