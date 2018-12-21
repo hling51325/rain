@@ -2,7 +2,7 @@
 const passport = require('koa-passport')
 const { SERVER, GITHUB } = require('config')
 const { passwordCrypto } = require('../service/util')
-const { User, Auth } = require('../schema')
+const { User, OAuth } = require('../schema')
 
 passport.serializeUser(({ _id }, done) => {
     done(null, { _id })
@@ -26,7 +26,7 @@ passport.use(new GithubStrategy({
     // callbackURL: `http://localhost:3000/api/auth/github/callback`
 }, async (accessToken, refreshToken, profile, done) => {
     profile = profile._json
-    let auth = await Auth.findOne({ id: profile.id, name: 'github' })
+    let auth = await OAuth.findOne({ id: profile.id, name: 'github' })
     if (auth) {
         let user = await User.findOne({ _id: auth.userId })
         done(null, user)
@@ -43,7 +43,7 @@ passport.use(new GithubStrategy({
             token: accessToken,
             profile
         }
-        await Auth.create(authData)
+        await OAuth.create(authData)
         done(null, user)
     }
 }))

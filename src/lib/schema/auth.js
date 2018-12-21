@@ -1,13 +1,10 @@
-
 module.exports = (Schema) => {
+    let ObjectId = Schema.Types.ObjectId
+
     let schema = Schema({
-        userId: Schema.Types.ObjectId,
-        id: String,
-        sessionId: String, // current sessionId
-        name: String, // which site
-        state: String,
-        token: String,
-        profile: Schema.Types.Mixed
+        userId: ObjectId,
+        resource: String, // project@xxx 
+        auths: []
     })
 
     return schema
