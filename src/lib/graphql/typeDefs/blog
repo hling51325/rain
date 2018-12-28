@@ -1,0 +1,21 @@
+type Blog {
+    _id: ObjectId
+    content: String
+    title: String
+    author: String
+    createdAt: Date
+    createdBy: ObjectId
+    updatedAt: Date
+    updatedBy: ObjectId
+
+    creator: User
+}
+
+extend type Query {
+    blog(_id: ObjectId!, content: String): Blog
+    blogs: [Blog]
+}
+
+extend type Mutation {
+    addBlog(content: String!, title: String!): Blog
+}

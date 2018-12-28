@@ -6,7 +6,6 @@ const { ApolloServer, gql } = require('apollo-server-koa')
 const router = require('./lib/routes')
 const { connect, ObjectId } = require('./lib/service/db')
 const serve = require('koa-static');
-// const sendfile = require('koa-sendfile')
 const fs = require('fs')
 const path = require('path')
 const session = require('koa-session')
@@ -63,19 +62,16 @@ app.use(async (ctx, next) => {
 app.use(router.routes())
 app.use(router.allowedMethods())
 
-const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: ({ ctx }) => {
-        // todo: add session
-        return ctx
-        // return {
-        //      authScope: getScope(ctx.headers.authorization)
-        // }
-    }
+app.use(async (ctx, next) => {
+    await next()
+    new ApolloServer({
+        typeDefs,
+        resolvers,
+        async context() {
+            return ctx
+        }
+    }).applyMiddleware({ app })
 })
-
-server.applyMiddleware({ app }) // 需要最后注册，没有next()
 
 module.exports = {
     run: async (port) => {

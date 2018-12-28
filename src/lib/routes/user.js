@@ -10,7 +10,6 @@ module.exports = [
 ]
 
 const User = require('../domain/user')
-const errMsg = require('../errMsg')
 
 async function update(ctx, next) {
     let { id } = ctx.params

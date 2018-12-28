@@ -29,9 +29,11 @@ module.exports = [
 ]
 
 const Blog = require('../domain/blog')
+const { Blog: BlogSchema } = require('../schema')
 
-function getBlogs(ctx, next) {
-    ctx.response.body = []
+async function getBlogs(ctx, next) {
+    let blogs = await BlogSchema.find({})
+    ctx.response.body = blogs
 }
 
 async function getBlog(ctx, next) {
@@ -41,7 +43,7 @@ async function getBlog(ctx, next) {
 }
 
 async function addBlog(ctx, next) {
-    let data = crx.body
+    let data = ctx.body
     let blog = await Blog.addBlog(data)
     ctx.response.body = blog
 }

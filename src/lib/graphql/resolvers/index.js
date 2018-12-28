@@ -4,10 +4,15 @@ const { merge } = require('lodash')
 const { GraphQLScalarType } = require('graphql')
 const { Kind } = require('graphql/language')
 
-let resolverModules = [
-    require('./user'),
-    require('./word')
-]
+const path = require('path')
+const fs = require('fs')
+
+const rootPath = path.join(__dirname, './');
+const files = fs.readdirSync(rootPath).filter(file => file !== 'index.js')
+
+const resolverModules = files.reduce((curr, resolver) => {
+    return curr.concat(require(`./${resolver}`))
+}, [])
 
 const Date = new GraphQLScalarType({
     name: 'Date',
@@ -43,7 +48,7 @@ const ObjectIdType = new GraphQLScalarType({
     }
 });
 
-let resolvers = {
+const resolvers = {
     ObjectId: ObjectIdType,
     Date,
     Query: {

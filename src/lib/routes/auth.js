@@ -34,7 +34,7 @@ module.exports = [
 
 const passport = require('koa-passport')
 const User = require('../domain/user')
-const errMsg = require('../errMsg')
+const errMsg = require('../service/errMsg')
 
 async function me(ctx, next) {
     if (!ctx.isAuthenticated()) return ctx.response.body = {}
@@ -44,30 +44,26 @@ async function me(ctx, next) {
 
 async function signIn(ctx, next) {
     return passport.authenticate('local', function (err, user, info, status) {
-        if (!user) throw errMsg('user.none')
+        if (!user) throw errMsg['USER_NONE']
         ctx.body = user
         return ctx.login(user)
     })(ctx)
 }
 
 async function signOut(ctx) {
-    if (ctx.isAuthenticated()) {
-        ctx.logout();
-        ctx.redirect('/');
-    } else {
-        throw errMsg('auth.noAuth')
-    }
+    ctx.logout();
+    ctx.redirect('/');
 }
 
 async function signUp(ctx, next) {
     const { username, password } = ctx.request.body
     if (!username || !password) throw errMsg('user.none')
     let isExist = await User.isExist({ username })
-    if (isExist) throw errMsg('user.exist')
+    if (isExist) throw errMsg['USER_EXIST']
 
     await User.signUp({ username, password })
     return passport.authenticate('local', function (err, user, info, status) {
-        if (!user) throw errMsg('user.none')
+        if (!user) throw errMsg['USER_NONE']
         ctx.body = user
         return ctx.login(user)
     })(ctx)
