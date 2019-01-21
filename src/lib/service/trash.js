@@ -1,8 +1,8 @@
 const { Trash } = require('../schema')
 
-module.exports = async (collection, resource, userId) => {
+module.exports = async (name, resource, userId) => {
     let data = {
-        collection,
+        name,
         resource,
         createdBy: userId,
         createdAt: new Date()

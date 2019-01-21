@@ -18,4 +18,6 @@ extend type Query {
 
 extend type Mutation {
     addBlog(content: String!, title: String!): Blog
+    updateBlog(content: String, title: String): Blog
+    deleteBlog(_id: ObjectId!): Blog
 }

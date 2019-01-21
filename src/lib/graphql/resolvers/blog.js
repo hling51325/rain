@@ -11,6 +11,7 @@ module.exports = {
             return Blog.find({})
         },
         blog: (root, args) => {
+            console.log(args)
             return Blog.findOne(args)
         }
     },
