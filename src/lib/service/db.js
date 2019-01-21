@@ -1,9 +1,9 @@
 const gridFSStream = require('gridfs-stream')
 const mongoose = require('mongoose');
 const { DB_URL } = require('config')
+const ObjectId = mongoose.Schema.Types.ObjectId
 gridFSStream.mongo = mongoose.mongo;
 mongoose.Promise = global.Promise;  // Use native promises
-let { addDefaultField, middleware } = require('./plugins')
 mongoose.plugin(addDefaultField)
 mongoose.plugin(middleware)
 
@@ -50,4 +50,31 @@ function getFileInfo(_id) {
             reject(err)
         })
     })
+}
+
+function addDefaultField(schema, option) {
+    schema.add({
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+        updatedAt: Date,
+        createdBy: ObjectId,
+        updatedBy: ObjectId
+    })
+}
+
+function middleware(schema) {
+    schema.pre('findOneAndUpdate', setDefaultOptions);
+    schema.pre('updateMany', setDefaultOptions);
+    schema.pre('updateOne', setDefaultOptions);
+    schema.pre('update', setDefaultOptions);
+    schema.pre('save', function (next) {
+        this.updatedAt = new Date();
+        next();
+    });
+
+    function setDefaultOptions() {
+        this.setOptions({ new: true });
+      }
 }

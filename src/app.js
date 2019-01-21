@@ -17,7 +17,8 @@ const passport = require('koa-passport')
 const typeDefs = gql(require('./lib/graphql/typeDefs'))
 const resolvers = require('./lib/graphql/resolvers')
 
-const app = new Koa();
+const app = new Koa()
+
 app.keys = ['tokinechiya']
 
 // app.proxy = true
@@ -59,9 +60,6 @@ app.use(async (ctx, next) => {
     }
 })
 
-app.use(router.routes())
-app.use(router.allowedMethods())
-
 app.use(async (ctx, next) => {
     await next()
     new ApolloServer({
@@ -72,6 +70,9 @@ app.use(async (ctx, next) => {
         }
     }).applyMiddleware({ app })
 })
+
+app.use(router.routes())
+app.use(router.allowedMethods())
 
 module.exports = {
     run: async (port) => {
