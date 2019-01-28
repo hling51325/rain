@@ -34,13 +34,13 @@ async function isAuth(ctx, next) {
 function fillApi(api) {
     if (!api.verb) throw 'no verb'
     if (!api.url) throw 'no url'
-    if (!api.method) throw 'no method'
+    api.methods = api.methods || api.method || []
     api.middlewares = api.middlewares || []
     // befores before / afters after / method methods / ---> array ?
     if (api.before) {
         api.middlewares = api.middlewares.concat(api.before)
     }
-    api.middlewares = api.middlewares.concat(api.method)
+    api.middlewares = api.middlewares.concat(api.methods)
     if (api.after) {
         api.middlewares = api.middlewares.concat(api.after)
     }

@@ -15,7 +15,8 @@ module.exports = {
     getDB,
     getFile,
     getFileInfo,
-    ObjectId: mongoose.Types.ObjectId
+    ObjectId: mongoose.Types.ObjectId,
+    mongoose
 };
 
 async function connect() {

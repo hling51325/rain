@@ -1,7 +1,7 @@
 
 const path = require('path')
 const fs = require('fs')
-const mongoose = require('mongoose');
+const { mongoose } = require('../service/db')
 const Schema = mongoose.Schema
 
 const rootPath = path.join(__dirname, './');
