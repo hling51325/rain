@@ -1,5 +1,3 @@
-
-
 const { Project, Member, User } = require('../schema')
 const { defaultRoles } = require('../../config/global')
 
