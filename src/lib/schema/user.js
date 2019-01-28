@@ -8,7 +8,7 @@ module.exports = (Schema) => {
         phone: String,
         gender: Number, // 0: no, 1: male, 2: female, 3: transform, 4: bisexual 
         birthday: Date,
-        avatar: String,
+        avatar: String
     })
 
     return schema

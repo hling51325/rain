@@ -63,7 +63,7 @@ async function addProject(data, userId) {
     } catch (e) {
         await removeProject(project._id)
         return "create project failed"
-    } Ï
+    }
 
     return project
 }

@@ -14,7 +14,7 @@ module.exports = async function lookup(data, fields, option) {
     fields = normalize(fields)
     let isSingle = Array.isArray(data)
     if (option.series) {
-        for (field in fields) {
+        for (let field in fields) {
             await process(fields[field])
         }
     } else {

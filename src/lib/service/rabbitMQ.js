@@ -8,8 +8,8 @@ module.exports = {
 let URL = 'amqp://localhost'
 
 async function connect() {
-    conn = await getConnect(URL)
-    ch = await getChannel(conn)
+    let conn = await getConnect(URL)
+    let ch = await getChannel(conn)
     return { conn, ch }
 
     function getConnect(URL) {

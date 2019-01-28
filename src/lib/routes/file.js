@@ -1,4 +1,5 @@
 const upload = require('../service/multer')
+const db = require('../service/db')
 
 module.exports = [
     {
@@ -25,9 +26,9 @@ function uploadFile(req, res) {
 
 async function getFile(req, res) {
     let id = req.params.id
-    let fileInfo = await mongo.getFileInfo(id)
+    let fileInfo = await db.getFileInfo(id)
     res.setHeader('Content-Disposition', `attachment;filename*=UTF-8''${encodeURIComponent(fileInfo.filename)}`);
-    return mongo.getFile(id, res)
+    return db.getFile(id, res)
 }
 
 async function getFileByName(req, res) {
