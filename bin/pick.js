@@ -1,8 +1,9 @@
-let fields = {
-    a: 1,
-    b: 2
+let _ = require('lodash')
+let fields = ['a', 'b']
+let obj = {
+    a: 1,b: 2,c: 3
 }
-for (field in fields) {
-    console.log(field)
-    console.log(fields[field])
-}
+
+let obj1 = _.pick(obj, fields)
+console.log(obj)
+console.log(obj1)

@@ -38,9 +38,10 @@ module.exports = {
         },
         async deleteBlog(root, args, ctx, info) {
             const userId = ctx.state.user._id
-            let blog = await Blog.findOne({ _id: args._id })
-            await trash('blog', blog, userId)
-            return Blog.deleteOne({ _id: args._id })
+            let result = await Blog.findOneAndDelete({ _id: args._id })
+            await trash('blog', result, userId)
+            return result
+            // return Blog.deleteOne({ _id: args._id })
         }
     }
 }

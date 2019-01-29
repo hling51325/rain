@@ -57,7 +57,7 @@ async function signOut(ctx) {
 
 async function signUp(ctx, next) {
     const { username, password } = ctx.request.body
-    if (!username || !password) throw errMsg('user.none')
+    if (!username || !password) throw errMsg['USER_NONE']
     let isExist = await User.isExist({ username })
     if (isExist) throw errMsg['USER_EXIST']
 

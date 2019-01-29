@@ -15,7 +15,6 @@ files.forEach(file => {
     let apis = require(path.join(rootPath, file))
     apis.forEach(api => {
         api = fillApi(api)
-        api.middlewares.unshift(require('../service/filter'))
         if (!noAuthRoutes.includes(file)) api.middlewares.unshift(isAuth)
         router[api.verb](api.url, ...api.middlewares)
     })

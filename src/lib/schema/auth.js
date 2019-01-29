@@ -1,8 +1,6 @@
 module.exports = (Schema) => {
-    let ObjectId = Schema.Types.ObjectId
-
     let schema = Schema({
-        userId: ObjectId,
+        userId: Schema.Types.ObjectId,
         resource: String, // project@xxx 
         auths: []
     })
