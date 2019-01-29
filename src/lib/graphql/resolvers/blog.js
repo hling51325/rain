@@ -1,11 +1,20 @@
-const { Blog } = require('../../schema')
+const { Blog, User } = require('../../schema')
 const trash = require('../../service/trash')
 
 module.exports = {
     Blog: {
-
+        creator(blog) {
+            return User.findOne({ _id: blog.createdBy })
+        },
+        updator(blog) {
+            return User.findOne({ _id: blog.updatedBy })
+        }
     },
     Query: {
+        myBlogs(root, args, ctx, info) {
+            let { _id } = ctx.state.user
+            return Blog.find({ createdBy: _id })
+        },
         blogs: (root, args, ctx, info) => {
             let { _id } = ctx.state.user
             return Blog.find({})
