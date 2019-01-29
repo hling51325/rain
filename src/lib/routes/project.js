@@ -25,14 +25,15 @@ module.exports = [
         method: addMember
     },
     {
-        verb: 'post',
+        verb: 'delete',
         url: '/projects/:id/members/:memberId/',
         method: removeMember
     }
 ]
 
-let Project = require('../domain/project')
-let Role = require('../domain/role')
+const Project = require('../domain/project')
+const Auth = require('../domain/auth')
+const errMsg = require('../service/errMsg')
 
 async function getById(ctx, next) {
     let id = ctx.params.id
@@ -55,10 +56,9 @@ async function getMembers(ctx, next) {
 
 async function addMember(ctx, next) {
     let projectId = ctx.params.id
-    let { userId } = ctx.session
-    if (!userId) return '401'
-    let hasAuth = await Role.hasAuth({ projectId, userId, authName: 'member-add' })
-    if (!hasAuth) return '401'
+    const userId = ctx.state.user._id
+    let hasAuth = await Auth.hasAuth(userId, 'ADD_MEMBER', 'project', projectId)
+    if (!hasAuth) throw errMsg['NO_AUTH']
     let member = await Project.addMember(projectId, userId)
     ctx.response.body = member
 }
@@ -68,18 +68,16 @@ async function addProject(ctx, next) {
     let { userId } = ctx.session
     if (!data) return '404'
     if (!data.name) return '404'
-    if (!userId) return '401'
 
     let project = await Project.addProject(data, userId)
     ctx.response.body = project
 }
 
 async function removeMember(ctx, next) {
-    let { id, memberId } = ctx.params
-    let { userId } = ctx.session
-    if (!userId) return '401'
-    let hasAuth = await Role.hasAuth({ id, userId, authName: 'member-remove' })
-    if (!hasAuth) return '401'
-    await Project.removeMember(memberId)
+    let { id: projectId, memberId } = ctx.params
+    const userId = ctx.state.user._id
+    let hasAuth = await Auth.hasAuth(userId, 'DELETE_MEMBER', 'project', projectId)
+    if (!hasAuth) return errMsg['NO_AUTH']
+    await Project.removeMember(memberId, userId, projectId)
     ctx.response.body = null
 }
