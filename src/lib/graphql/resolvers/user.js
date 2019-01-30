@@ -25,8 +25,7 @@ module.exports = {
         },
         async updateUser(_, args, ctx) {
             let data = {
-                ...fields(args),
-
+                ...fields(args)
             }
             return User.findOneAndUpdate({ _id: args._id }, data)
         }
