@@ -9,11 +9,13 @@ type Blog {
     updatedBy: ObjectId
 
     creator: User
+    updator: User
 }
 
 extend type Query {
     blog(_id: ObjectId!, content: String): Blog
     blogs: [Blog]
+    myBlogs: [Blog]
 }
 
 extend type Mutation {

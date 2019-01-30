@@ -14,6 +14,7 @@ const webSocket = require('./lib/service/webSocket');
 const passport = require('koa-passport')
 
 const app = new Koa()
+require('./lib/service/rateLimiter')(app)
 
 app.keys = ['tokinechiya']
 
