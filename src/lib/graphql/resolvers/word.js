@@ -13,10 +13,15 @@ module.exports = {
         }
     },
     Mutation: {
-        addWord(_, args) {
-            let data = args
-
-            // todo:  add session
+        addWord(_, args, ctx) {
+            const userId = ctx.userId
+            let data = {
+                ...args,
+                createdBy: userId,
+                updatedBy: userId,
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            }
             return Word.create(data)
         }
     }

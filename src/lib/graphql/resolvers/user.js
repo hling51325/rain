@@ -1,6 +1,7 @@
 const { User, Word } = require('../../schema')
 const { passwordCrypto } = require('../../service/util')
 const errMsg = require('../../service/errMsg')
+const fields = require('../../service/fields')
 
 module.exports = {
     User: {
@@ -21,6 +22,13 @@ module.exports = {
             if (user) throw errMsg['USER_EXIST']
             data.password = passwordCrypto(data.password)
             return User.create(data)
+        },
+        async updateUser(_, args, ctx) {
+            let data = {
+                ...fields(args),
+
+            }
+            return User.findOneAndUpdate({ _id: args._id }, data)
         }
     }
 }
