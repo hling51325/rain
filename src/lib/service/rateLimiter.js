@@ -1,10 +1,11 @@
 const ratelimit = require('koa-ratelimit')
 const Redis = require('ioredis')
+const { RATE_LIMIT } = require('config')
 
 module.exports = app => {
     app.use(ratelimit({
         db: new Redis(),
-        duration: 60000, // ms
+        duration: RATE_LIMIT.DURATION, // ms
         errorMessage: 'Sometimes You Just Have to Slow Down.',
         id: (ctx) => ctx.ip,
         headers: {
@@ -12,7 +13,7 @@ module.exports = app => {
             reset: 'Rate-Limit-Reset',
             total: 'Rate-Limit-Total'
         },
-        max: 100,
+        max: RATE_LIMIT.MAX,
         disableHeader: false,
     }))
 }

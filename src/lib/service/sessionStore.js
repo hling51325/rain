@@ -1,5 +1,6 @@
 
 const mongoose = require('mongoose')
+const { SESSION } = require('config')
 
 const schema = {
     data: Object,
@@ -12,7 +13,7 @@ const schema = {
 class MongooseStore {
     constructor({
         // collection = 'sessions',
-        expires = 86400,
+        expires = SESSION.EXPIRE,
         name = 'session'
     } = {}) {
         const updatedAt = { ...schema.updatedAt, expires };
