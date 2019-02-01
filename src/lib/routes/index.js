@@ -15,6 +15,7 @@ files.forEach(file => {
     let apis = require(path.join(rootPath, file))
     apis.forEach(api => {
         api = fillApi(api)
+        api.middlewares.unshift(parameterCombinder)
         if (!noAuthRoutes.includes(file)) api.middlewares.unshift(isAuth)
         router[api.verb](api.url, ...api.middlewares)
     })
@@ -44,4 +45,16 @@ function fillApi(api) {
         api.middlewares = api.middlewares.concat(api.after)
     }
     return api
+}
+
+async function parameterCombinder(ctx, next) {
+    let userId = ctx.state.user._id || null
+    let commonInfo = {
+        createdBy: userId,
+        updatedBy: userId,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+    }
+    ctx.data = { ...ctx.params, ...ctx.body, ...commonInfo, userId }
+    await next()
 }

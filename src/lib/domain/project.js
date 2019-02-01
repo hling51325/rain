@@ -60,7 +60,8 @@ async function addProject(data, userId) {
     try {
         let roles = defaultRoles.map(role => {
             role.projectId = project._id
-            projectAuths[role.name]
+            projectAuths[role.name],
+                roles.auths = auths.project[role.name]
             return role
         })
 
@@ -82,11 +83,12 @@ async function addProject(data, userId) {
 
 async function removeProject(projectId) {
     if (!projectId) return
-    await Project.deleteOne({ _id: projectId })
+    let project = await Project.findOneAndDelete({ _id: projectId })
     await Role.deleteMany({ projectId })
     let userIds = Member.find({ projectId }).distinct('userId')
     await Member.deleteMany({ projectId })
     await Auth.deleteMany({ userId: { $in: userIds }, scopeId: projectId })
+    return project
 }
 
 async function removeMember(memberId, userId, projectId) {
