@@ -1,6 +1,7 @@
 const { Project, Member, User, Auth } = require('../schema')
 const defaultRoles = require('../../global/Role')
 const { auths } = require('../../global/auth')
+const errMsg = require('../service/errMsg')
 
 module.exports = {
     get,
@@ -55,8 +56,8 @@ async function addMember(projectId, userId) {
 }
 
 async function addProject(data, userId) {
+    let project = await Project.create(data)
     try {
-        let project = await Project.create(data)
         let roles = defaultRoles.map(role => {
             role.projectId = project._id
             projectAuths[role.name]
@@ -70,12 +71,12 @@ async function addProject(data, userId) {
             scopeId: project._id,
             auths: auths.project[role.name]
         })
-        let admin = newRoles.find(role => role.name = 'admin')
+        let admin = newRoles.find(role => role.name === 'admin')
         await Member.create({ projectId: project._id, userId, roleId: admin._id })
         return project
     } catch (e) {
-        await removeProject(project._id)
-        return "create project failed"
+        project && await removeProject(project._id)
+        throw errMsg['UNEXCEPT']
     }
 }
 
@@ -83,7 +84,9 @@ async function removeProject(projectId) {
     if (!projectId) return
     await Project.deleteOne({ _id: projectId })
     await Role.deleteMany({ projectId })
+    let userIds = Member.find({ projectId }).distinct('userId')
     await Member.deleteMany({ projectId })
+    await Auth.deleteMany({ userId: { $in: userIds }, scopeId: projectId })
 }
 
 async function removeMember(memberId, userId, projectId) {
@@ -91,6 +94,6 @@ async function removeMember(memberId, userId, projectId) {
         await Member.deleteOne({ _id: memberId })
         await Auth.deleteOne({ userId, scopeId: projectId })
     } catch (e) {
-
+        throw errMsg['UNEXCEPT']
     }
 }

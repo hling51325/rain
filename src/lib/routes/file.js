@@ -10,8 +10,7 @@ module.exports = [
     {
         verb: 'post',
         url: '/files/',
-        before: [upload.single('file')],
-        method: uploadFile
+        methods: [upload.single('file'), uploadFile]
     },
     {
         verb: 'get',
@@ -20,9 +19,9 @@ module.exports = [
     }
 ]
 
-function uploadFile(req, res) {
-    res.json(req.file)
-}
+function uploadFile(ctx, next) {
+    ctx.response.body = ctx.file
+}ƒ
 
 async function getFile(req, res) {
     let id = req.params.id
@@ -33,5 +32,5 @@ async function getFile(req, res) {
 
 async function getFileByName(req, res) {
     let { id, name } = req.params
-    
+
 }

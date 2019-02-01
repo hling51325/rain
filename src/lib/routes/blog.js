@@ -2,9 +2,7 @@ module.exports = [
     {
         verb: 'get',
         url: '/blogs/',
-        before: [],
-        method: getBlogs,
-        after: []
+        method: getBlogs
     },
     {
         verb: 'get',

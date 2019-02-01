@@ -1,4 +1,12 @@
 const errorMessages = {
+    UNEXCEPT: {
+        status: 500,
+        message: '系统未知错误'
+    },
+    MISS_PARAMS: {
+        status: 400,
+        message: '参数错误'
+    },
     USER_EXIST: {
         status: 400,
         message: '用户已存在'

@@ -4,8 +4,7 @@ module.exports = [
     {
         verb: 'put',
         url: '/user/:id/',
-        before: [upload.single('avatar')],
-        method: update
+        methods: [upload.single('avatar'), update]
     }
 ]
 
