@@ -21,7 +21,7 @@ module.exports = [
 
 function uploadFile(ctx, next) {
     ctx.response.body = ctx.file
-}ƒ
+}
 
 async function getFile(req, res) {
     let id = req.params.id
