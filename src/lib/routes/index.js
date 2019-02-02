@@ -48,7 +48,7 @@ function fillApi(api) {
 }
 
 async function parameterCombinder(ctx, next) {
-    let userId = ctx.state.user._id || null
+    let userId = ctx.state.user && ctx.state.user._id || null
     let commonInfo = {
         createdBy: userId,
         updatedBy: userId,

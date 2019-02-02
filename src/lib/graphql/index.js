@@ -11,7 +11,6 @@ module.exports = app => {
             resolvers,
             async context() {
                 if(!ctx.isAuthenticated()) throw errMsg['NO_AUTH']
-                ctx.userId = ctx.state.user._id
                 return ctx
             }
         }).applyMiddleware({ app })

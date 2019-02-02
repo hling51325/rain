@@ -18,6 +18,7 @@ module.exports = {
             "ADD_USER"
         ],
         normal: [
+            "UPDATE_SELF"
         ]
     }
 }
