@@ -5,7 +5,7 @@ const { passwordCrypto } = require('../service/util')
 const { User, OAuth } = require('../schema')
 
 passport.serializeUser(({ _id }, done) => {
-    done(null, { _id })
+    return done(null, { _id })
 })
 
 passport.deserializeUser((_id, done) => {
@@ -29,7 +29,7 @@ passport.use(new GithubStrategy({
     let auth = await OAuth.findOne({ id: profile.id, name: 'github' })
     if (auth) {
         let user = await User.findOne({ _id: auth.userId })
-        done(null, user)
+        return done(null, user)
     } else {
         let userData = {
             nickname: profile.name,
@@ -44,6 +44,6 @@ passport.use(new GithubStrategy({
             profile
         }
         await OAuth.create(authData)
-        done(null, user)
+        return done(null, user)
     }
 }))
