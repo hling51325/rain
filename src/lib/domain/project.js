@@ -1,5 +1,5 @@
 const { Project, Member, User, Auth } = require('../schema')
-const defaultRoles = require('../../global/Role')
+const defaultRoles = require('../../global/role')
 const { auths } = require('../../global/auth')
 const errMsg = require('../service/errMsg')
 
