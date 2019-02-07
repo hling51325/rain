@@ -67,6 +67,7 @@ module.exports = {
         await connect()
         let server = await app.listen(port)
         webSocket.init(server)
+        require('./lib/service/schedule')
         console.log(`Server Listening ${port}`)
     },
     app
