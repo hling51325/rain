@@ -1,4 +1,4 @@
-const { pick } = require('lodash')
+const { pick, curry } = require('lodash')
 const createMeta = ['createdAt', 'createdBy', 'updatedAt', 'updatedBy']
 const updateMeta = ['updatedAt', 'updatedBy']
 const fields = {
@@ -12,6 +12,6 @@ const fields = {
     }
 }
 
-module.exports = (data, model, action) => {
+module.exports = curry((model, action, data) => {
     return pick(data, fields[model][action])
-}
+})
