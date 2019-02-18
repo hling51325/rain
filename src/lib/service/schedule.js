@@ -9,8 +9,8 @@ async function lottery() {
     let { data } = await axios.get(URL)
     data = data.data
     let isExists = await Lottery.findOne({ expect: data.expect })
-    console.log(isExists)
     if (isExists) return
+    console.log(data)
     await Lottery.create(job(data))
 
     function job(data) {
