@@ -18,7 +18,7 @@ require('./lib/service/rateLimiter')(app)
 
 app.keys = ['tokinechiya']
 
-// app.proxy = true
+app.proxy = true
 
 app.use(cors({
     credentials: true

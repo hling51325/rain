@@ -8,6 +8,9 @@ module.exports = app => {
         duration: RATE_LIMIT.DURATION, // ms
         errorMessage: 'Sometimes You Just Have to Slow Down.',
         id: (ctx) => ctx.ip,
+        whitelist: (ctx) => {
+            return ctx.ip === '::1'
+        },
         headers: {
             remaining: 'Rate-Limit-Remaining',
             reset: 'Rate-Limit-Reset',
