@@ -29,7 +29,7 @@ module.exports = [
 ]
 
 const { Test } = require('../schema')
-async function touch(ctx, next) {
+function touch(ctx, next) {
     ctx.response.body = "hello world"
 }
 
@@ -43,8 +43,7 @@ async function test(ctx, next) {
 }
 
 function time(ctx, next) {
-    const time = Date.now()
-    ctx.response.body = time
+    ctx.response.body = Date.now()
 }
 
 async function mongoTest1(ctx, next) {

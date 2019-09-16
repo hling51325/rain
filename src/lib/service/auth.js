@@ -13,9 +13,8 @@ passport.deserializeUser((_id, done) => {
 })
 
 const LocalStrategy = require('passport-local').Strategy
-passport.use(new LocalStrategy(async (username, password, done) => {
-    let user = await User.findOne({ username, password: passwordCrypto(password) }, '-password')
-    return done(null, user)
+passport.use(new LocalStrategy((username, password, done) => {
+    return User.findOne({ username, password: passwordCrypto(password) }, '-password', done)
 }))
 
 const GithubStrategy = require('passport-github').Strategy

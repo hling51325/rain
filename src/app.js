@@ -14,6 +14,8 @@ const SessionStore = require('./lib/service/sessionStore')
 const webSocket = require('./lib/service/webSocket');
 const passport = require('koa-passport')
 
+require('./lib/service/auth')
+
 const app = new Koa()
 require('./lib/service/rateLimiter')(app)
 
@@ -35,7 +37,6 @@ app.use(session({
 
 app.use(bodyParser())
 
-require('./lib/service/auth')
 app.use(passport.initialize())
 app.use(passport.session())
 
