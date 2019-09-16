@@ -22,6 +22,7 @@ module.exports = {
 async function connect() {
     try {
         let ret = await mongoose.connect(DB_URL, {
+            poolSize: 10,
             useNewUrlParser: true
         })
         db = ret.connection.db

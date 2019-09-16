@@ -1,7 +1,8 @@
 const Koa = require('koa');
 const helmet = require("koa-helmet");
 const bodyParser = require('koa-bodyparser')
-const logger = require('koa-logger')
+const compress = require('koa-compress')
+const logger = require('koa-morgan')
 const router = require('./lib/routes')
 const { connect, ObjectId } = require('./lib/service/db')
 const serve = require('koa-static');
@@ -38,10 +39,13 @@ require('./lib/service/auth')
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use(logger())
+app.use(logger('tiny'))
 app.use(helmet())
 app.use(serve(path.join(__dirname, '../public/dist')))
-
+app.use(compress({
+    threshold: 1024,
+    flush: require('zlib').Z_SYNC_FLUSH
+  }))
 // error handler
 app.use(async (ctx, next) => {
     try {
