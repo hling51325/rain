@@ -13,7 +13,10 @@ const cors = require('@koa/cors');
 const SessionStore = require('./lib/service/sessionStore')
 const webSocket = require('./lib/service/webSocket');
 const passport = require('koa-passport')
-
+const { ApolloServer, gql } = require('apollo-server-koa')
+const typeDefs = gql(require('./lib/graphql/typeDefs'))
+const resolvers = require('./lib/graphql/resolvers')
+const errMsg = require('./lib/service/errMsg')
 require('./lib/service/auth')
 
 const app = new Koa()
@@ -46,7 +49,7 @@ app.use(serve(path.join(__dirname, '../public/dist')))
 app.use(compress({
     threshold: 1024,
     flush: require('zlib').Z_SYNC_FLUSH
-  }))
+}))
 // error handler
 app.use(async (ctx, next) => {
     try {
@@ -62,7 +65,19 @@ app.use(async (ctx, next) => {
     }
 })
 
-require('./lib/graphql')(app)
+app.use(new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ ctx }) => {
+        if (!ctx.isAuthenticated()) throw errMsg['NO_AUTH']
+        return ctx
+    },
+    playground: {
+        settings: {
+            "request.credentials": "include"
+        }
+    }
+}).getMiddleware())
 
 app.use(router.routes())
 app.use(router.allowedMethods())
