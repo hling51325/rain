@@ -13,7 +13,6 @@ const User = require('../domain/user')
 async function update(ctx, next) {
     let { id } = ctx.params
     let data = ctx.body
-    console.log(ctx.body)
     let user = await User.updateById(id, data)
     ctx.response.body = user
 }

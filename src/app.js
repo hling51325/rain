@@ -72,6 +72,7 @@ app.use(new ApolloServer({
         if (!ctx.isAuthenticated()) throw errMsg['NO_AUTH']
         return ctx
     },
+    // path: "/graphql",
     playground: {
         settings: {
             "request.credentials": "include"
